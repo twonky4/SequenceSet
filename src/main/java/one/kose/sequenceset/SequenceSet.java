@@ -184,7 +184,7 @@ public final class SequenceSet {
                 newList.add(smallest);
                 parts.remove(smallest);
             }
-        } while (!parts.isEmpty() && smallest != null);
+        } while (parts.size() > 0 && smallest != null);
         parts = newList;
     }
 
@@ -320,22 +320,26 @@ public final class SequenceSet {
 
     @Override
     public String toString() {
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
 
         for (SequencePart part : parts) {
-            if (!ret.isEmpty()) {
-                ret += splitSign;
+            if (ret.length() > 0) {
+                ret.append(splitSign);
             }
 
             if (part.fromId.equals(part.toId)) {
-                ret += part.fromId;
+                ret.append(part.fromId);
             } else if (!part.isWildCard() && (part.getFromIdNum() + 1) == part.getToIdNum()) {
-                ret += part.fromId + splitSign + part.toId;
+                ret.append(part.fromId);
+                ret.append(splitSign);
+                ret.append(part.toId);
             } else {
-                ret += part.fromId + rangeSign + part.toId;
+                ret.append(part.fromId);
+                ret.append(rangeSign);
+                ret.append(part.toId);
             }
         }
 
-        return ret;
+        return ret.toString();
     }
 }
