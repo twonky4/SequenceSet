@@ -156,7 +156,7 @@ public class SequenceSetBuildTest {
     public void testConstructWildCard() throws SequenceSetException {
         SequenceSet set = SequenceSet.defaults().add("1:*");
 
-        set.add(4L);
+        set.add(4);
 
         assertEquals("1:*", set.toString());
     }
@@ -169,6 +169,7 @@ public class SequenceSetBuildTest {
         set.add((String) null);
         set.add("");
         set.add((Long) null);
+        set.add((Integer) null);
 
         assertEquals("1:7", set.toString());
     }

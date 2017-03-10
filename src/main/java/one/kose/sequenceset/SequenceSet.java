@@ -315,7 +315,7 @@ public final class SequenceSet {
             } else if (o instanceof Long) {
                 add((Long) o);
             } else if (o instanceof Integer) {
-                add(((Integer) o).longValue());
+                add((Integer) o);
             } else {
                 throw new SequenceSetException(0, o.toString().charAt(0));
             }
@@ -325,6 +325,18 @@ public final class SequenceSet {
     }
 
     public SequenceSet add(Long l) {
+        try {
+            if (l != null) {
+                add(l.toString());
+            }
+        } catch (SequenceSetException e) {
+            // do never thrown for number
+        }
+
+        return this;
+    }
+
+    public SequenceSet add(Integer l) {
         try {
             if (l != null) {
                 add(l.toString());
