@@ -16,6 +16,10 @@ public class SequenceSetBuildTest {
         set.add(1L);
 
         assertEquals("1", set.toString());
+
+        set.clear();
+
+        assertEquals("", set.toString());
     }
 
     @Test

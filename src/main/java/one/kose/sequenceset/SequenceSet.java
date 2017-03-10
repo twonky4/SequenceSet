@@ -363,4 +363,8 @@ public final class SequenceSet {
 
         return ret.toString();
     }
+
+    public void clear() {
+        parts.clear();
+    }
 }
