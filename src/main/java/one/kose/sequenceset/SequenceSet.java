@@ -1,6 +1,7 @@
 package one.kose.sequenceset;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,29 +19,20 @@ public final class SequenceSet {
         private SequenceSetBuilder() {
         }
 
-        public SequenceSetBuilder splitAs(String splitSign) throws SequenceSetInitException {
-            checkSign(splitSign, rangeSign, wildcardSign);
-            checkSize(splitSign);
-
+        public SequenceSetBuilder splitAs(String splitSign) {
             this.splitSign = splitSign;
 
             return this;
         }
 
-        public SequenceSetBuilder rangeAs(String rangeSign) throws SequenceSetInitException {
-            checkSign(splitSign, rangeSign, wildcardSign);
-            checkSize(rangeSign);
-
+        public SequenceSetBuilder rangeAs(String rangeSign) {
             this.rangeSign = rangeSign;
 
             return this;
 
         }
 
-        public SequenceSetBuilder wildcardAs(String wildcardSign) throws SequenceSetInitException {
-            checkSign(splitSign, rangeSign, wildcardSign);
-            checkSize(wildcardSign);
-
+        public SequenceSetBuilder wildcardAs(String wildcardSign) {
             this.wildcardSign = wildcardSign;
 
             return this;
@@ -63,19 +55,24 @@ public final class SequenceSet {
             }
         }
 
-        private void checkSize(String sign) throws SequenceSetInitException {
+        private void checkSize(String sign, String name) throws SequenceSetInitException {
             if (sign == null || sign.length() == 0) {
-                throw new SequenceSetInitException("sign can not be empty");
+                throw new SequenceSetInitException(name + " sign can not be empty");
             }
 
             for (char c : sign.toCharArray()) {
                 if (Character.isDigit(c)) {
-                    throw new SequenceSetInitException("sign can not be a number");
+                    throw new SequenceSetInitException(name + " sign can not be a number");
                 }
             }
         }
 
-        public SequenceSet build() {
+        public SequenceSet build() throws SequenceSetInitException {
+            checkSize(splitSign, "split");
+            checkSize(rangeSign, "range");
+            checkSize(wildcardSign, "wildcard");
+            checkSign(splitSign, rangeSign, wildcardSign);
+
             return new SequenceSet(splitSign, rangeSign, wildcardSign);
         }
     }
@@ -85,7 +82,12 @@ public final class SequenceSet {
     }
 
     public static SequenceSet defaults() {
-        return new SequenceSetBuilder().build();
+        try {
+            return new SequenceSetBuilder().build();
+        } catch (SequenceSetInitException e) {
+            // never thrown for defaults
+            return null;
+        }
     }
 
     private SequenceSet(String splitSign, String rangeSign, String wildcardSign) {
@@ -95,6 +97,9 @@ public final class SequenceSet {
     }
 
     private void addParts(String idStr) throws SequenceSetException {
+        if (idStr == null || idStr.length() == 0) {
+            return;
+        }
         checkString(idStr);
 
         String[] prepList;
@@ -122,14 +127,13 @@ public final class SequenceSet {
         int pos = 0;
         for (char c : idStr.toCharArray()) {
             if (!Character.isDigit(c)) {
-                boolean splitFound = splitSign
-                        .equals(idStr.substring(pos, pos + splitSign.length()));
-                boolean rangeFound = rangeSign
-                        .equals(idStr.substring(pos, pos + rangeSign.length()));
-                boolean wildcardFound = wildcardSign
-                        .equals(idStr.substring(pos, pos + wildcardSign.length()));
-
-                if (!splitFound && !rangeFound && !wildcardFound) {
+                if (splitSign.equals(idStr.substring(pos, pos + splitSign.length()))) {
+                    // okay
+                } else if (rangeSign.equals(idStr.substring(pos, pos + rangeSign.length()))) {
+                    // okay
+                } else if (wildcardSign.equals(idStr.substring(pos, pos + wildcardSign.length()))) {
+                    // okay
+                } else {
                     throw new SequenceSetException(pos, c);
                 }
             }
@@ -302,9 +306,29 @@ public final class SequenceSet {
         }
     }
 
-    public SequenceSet add(long l) {
+    public SequenceSet add(Collection<?> c) throws SequenceSetException {
+        for (Object o : c) {
+            if (o == null) {
+                // ignore
+            } else if (o instanceof String) {
+                add((String) o);
+            } else if (o instanceof Long) {
+                add((Long) o);
+            } else if (o instanceof Integer) {
+                add(((Integer) o).longValue());
+            } else {
+                throw new SequenceSetException(0, o.toString().charAt(0));
+            }
+        }
+
+        return this;
+    }
+
+    public SequenceSet add(Long l) {
         try {
-            add(Long.toString(l));
+            if (l != null) {
+                add(l.toString());
+            }
         } catch (SequenceSetException e) {
             // do never thrown for number
         }

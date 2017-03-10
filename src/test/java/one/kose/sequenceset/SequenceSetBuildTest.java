@@ -1,6 +1,10 @@
 package one.kose.sequenceset;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.junit.Test;
 
@@ -12,6 +16,72 @@ public class SequenceSetBuildTest {
         set.add(1L);
 
         assertEquals("1", set.toString());
+    }
+
+    @Test
+    public void testSignConfig() throws SequenceSetInitException, SequenceSetException {
+        SequenceSet set = SequenceSet.factory().wildcardAs("?").rangeAs("-").splitAs(";").build();
+
+        set.add(1L);
+        set.add(2L);
+        set.add(3L);
+        set.add(5L);
+        set.add("7-?");
+
+        assertEquals("1-3;5;7-?", set.toString());
+    }
+
+    @Test
+    public void testSignConfigFail() throws SequenceSetInitException, SequenceSetException {
+        try {
+            SequenceSet.factory().wildcardAs("?").rangeAs("?").splitAs(";").build();
+
+            fail("should fail");
+        } catch (SequenceSetInitException e) {
+            assertEquals("range sign can not be equals with wildcard sign", e.getMessage());
+        }
+        try {
+            SequenceSet.factory().wildcardAs("?").rangeAs("-").splitAs("-").build();
+
+            fail("should fail");
+        } catch (SequenceSetInitException e) {
+            assertEquals("split sign can not be equals with range sign", e.getMessage());
+        }
+        try {
+            SequenceSet.factory().wildcardAs("?").rangeAs("-").splitAs("?").build();
+
+            fail("should fail");
+        } catch (SequenceSetInitException e) {
+            assertEquals("split sign can not be equals with wildcard sign", e.getMessage());
+        }
+        try {
+            SequenceSet.factory().wildcardAs(null).rangeAs("").build();
+
+            fail("should fail");
+        } catch (SequenceSetInitException e) {
+            assertEquals("range sign can not be empty", e.getMessage());
+        }
+        try {
+            SequenceSet.factory().wildcardAs(null).build();
+
+            fail("should fail");
+        } catch (SequenceSetInitException e) {
+            assertEquals("wildcard sign can not be empty", e.getMessage());
+        }
+        try {
+            SequenceSet.factory().rangeAs("").build();
+
+            fail("should fail");
+        } catch (SequenceSetInitException e) {
+            assertEquals("range sign can not be empty", e.getMessage());
+        }
+        try {
+            SequenceSet.factory().rangeAs("0").build();
+
+            fail("should fail");
+        } catch (SequenceSetInitException e) {
+            assertEquals("range sign can not be a number", e.getMessage());
+        }
     }
 
     @Test
@@ -96,8 +166,37 @@ public class SequenceSetBuildTest {
         SequenceSet set = SequenceSet.defaults().add("1:3");
 
         set.add("4:7");
+        set.add((String) null);
+        set.add("");
+        set.add((Long) null);
 
         assertEquals("1:7", set.toString());
+    }
+
+    @Test
+    public void testCollection() throws SequenceSetException {
+        Collection<Object> c = new ArrayList<Object>();
+        c.add(1L);
+        c.add("3:5");
+        c.add(7);
+        c.add(null);
+        SequenceSet set = SequenceSet.defaults().add(c);
+
+        assertEquals("1,3:5,7", set.toString());
+    }
+
+    @Test
+    public void testInvalidCollection() throws SequenceSetException {
+        Collection<Object> c = new ArrayList<Object>();
+        c.add(5d);
+        try {
+            SequenceSet.defaults().add(c);
+
+            fail("should fail");
+        } catch (SequenceSetException e) {
+            assertEquals(0, e.getPosition());
+            assertEquals('5', e.getCharacter());
+        }
     }
 
     @Test
