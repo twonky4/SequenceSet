@@ -167,12 +167,12 @@ public final class SequenceSet {
                 if (smallest == null) {
                     smallest = part;
                 } else {
-                    if (!part.getFromId().equals(wildcardSign)
-                            && !smallest.getFromId().equals(wildcardSign)
+                    if (!wildcardSign.equals(part.getFromId())
+                            && !wildcardSign.equals(smallest.getFromId())
                             && part.getFromIdNum() < smallest.getFromIdNum()) {
                         smallest = part;
-                    } else if (part.getFromId().equals(wildcardSign)
-                            && !smallest.getFromId().equals(wildcardSign)) {
+                    } else if (wildcardSign.equals(part.getFromId())
+                            && !wildcardSign.equals(smallest.getFromId())) {
                         smallest = part;
                     }
                 }
@@ -191,16 +191,16 @@ public final class SequenceSet {
         }
 
         for (SequencePart part : parts) {
-            if (part.getFromId().equals(wildcardSign) && part.getToId().equals(wildcardSign)) {
+            if (wildcardSign.equals(part.getFromId()) && wildcardSign.equals(part.getToId())) {
                 return true;
             }
 
-            if (part.getFromId().equals(wildcardSign) && part.getToIdNum() != null
+            if (wildcardSign.equals(part.getFromId()) && part.getToIdNum() != null
                     && searchId <= part.getToIdNum()) {
                 return true;
             }
 
-            if (part.getToId().equals(wildcardSign) && part.getFromIdNum() != null
+            if (wildcardSign.equals(part.getToId()) && part.getFromIdNum() != null
                     && searchId >= part.getFromIdNum()) {
                 return true;
             }
@@ -255,14 +255,14 @@ public final class SequenceSet {
         }
 
         public boolean isFromWildCard() {
-            if (fromId.equals(wildcardSign)) {
+            if (wildcardSign.equals(fromId)) {
                 return true;
             }
             return false;
         }
 
         public boolean isToWildCard() {
-            if (toId.equals(wildcardSign)) {
+            if (wildcardSign.equals(toId)) {
                 return true;
             }
             return false;
