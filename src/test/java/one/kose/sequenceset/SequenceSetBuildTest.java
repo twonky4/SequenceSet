@@ -19,7 +19,7 @@ public class SequenceSetBuildTest {
     }
 
     @Test
-    public void testSignConfig() throws SequenceSetInitException, SequenceSetException {
+    public void testSignConfig() {
         SequenceSet set = SequenceSet.factory().wildcardAs("?").rangeAs("-").splitAs(";").build();
 
         set.add(1L);
@@ -32,7 +32,29 @@ public class SequenceSetBuildTest {
     }
 
     @Test
-    public void testSignConfigFail() throws SequenceSetInitException, SequenceSetException {
+    public void testSignConfigMultiChar() {
+        SequenceSet set = SequenceSet.factory().splitAs(", ").build();
+
+        set.add("1");
+        set.add("3");
+        set.add("5, 6, 7");
+
+        assertEquals("1, 3, 5:7", set.toString());
+    }
+
+    @Test
+    public void testAddRanges() {
+        SequenceSet set = SequenceSet.defaults();
+
+        set.add("1");
+        set.add("3:5");
+        set.add("7,8,9");
+
+        assertEquals("1,3:5,7:9", set.toString());
+    }
+
+    @Test
+    public void testSignConfigFail() {
         try {
             SequenceSet.factory().wildcardAs("?").rangeAs("?").splitAs(";").build();
 
@@ -144,7 +166,7 @@ public class SequenceSetBuildTest {
     }
 
     @Test
-    public void testConstructSimple() throws SequenceSetException {
+    public void testConstructSimple() {
         SequenceSet set = SequenceSet.defaults().add("1:3");
 
         set.add(4L);
@@ -153,7 +175,7 @@ public class SequenceSetBuildTest {
     }
 
     @Test
-    public void testConstructWildCard() throws SequenceSetException {
+    public void testConstructWildCard() {
         SequenceSet set = SequenceSet.defaults().add("1:*");
 
         set.add(4);
@@ -162,7 +184,7 @@ public class SequenceSetBuildTest {
     }
 
     @Test
-    public void testSimplify() throws SequenceSetException {
+    public void testSimplify() {
         SequenceSet set = SequenceSet.defaults().add("1:3");
 
         set.add("4:7");
@@ -175,7 +197,7 @@ public class SequenceSetBuildTest {
     }
 
     @Test
-    public void testCollection() throws SequenceSetException {
+    public void testCollection() {
         Collection<Object> c = new ArrayList<Object>();
         c.add(1L);
         c.add("3:5");
@@ -187,7 +209,7 @@ public class SequenceSetBuildTest {
     }
 
     @Test
-    public void testInvalidCollection() throws SequenceSetException {
+    public void testInvalidCollection() {
         Collection<Object> c = new ArrayList<Object>();
         c.add(5d);
         try {
@@ -201,7 +223,7 @@ public class SequenceSetBuildTest {
     }
 
     @Test
-    public void testWildCardMulti() throws SequenceSetException {
+    public void testWildCardMulti() {
         SequenceSet set = SequenceSet.defaults().add("1:*");
 
         set.add("5:7");
@@ -210,7 +232,7 @@ public class SequenceSetBuildTest {
     }
 
     @Test
-    public void testCleanUp() throws SequenceSetException {
+    public void testCleanUp() {
         SequenceSet set = SequenceSet.defaults().add("7:8,1,2,4:5,9");
 
         assertEquals("1,2,4,5,7:9", set.toString());
@@ -257,26 +279,26 @@ public class SequenceSetBuildTest {
     }
 
     @Test
-    public void testSort() throws SequenceSetException {
+    public void testSort() {
         SequenceSet set = SequenceSet.defaults().add("9,4:6,1,2");
 
         assertEquals("1,2,4:6,9", set.toString());
     }
 
     @Test
-    public void testSortWildCard() throws SequenceSetException {
+    public void testSortWildCard() {
         SequenceSet set = SequenceSet.defaults().add("4:*,2");
 
         assertEquals("2,4:*", set.toString());
     }
 
     @Test(expected = SequenceSetException.class)
-    public void testInvalidChar() throws SequenceSetException {
+    public void testInvalidChar() {
         SequenceSet.defaults().add("A");
     }
 
     @Test(expected = SequenceSetException.class)
-    public void testInvalidQuote() throws SequenceSetException {
+    public void testInvalidQuote() {
         SequenceSet.defaults().add("\"\"");
     }
 }

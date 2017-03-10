@@ -38,8 +38,7 @@ public final class SequenceSet {
             return this;
         }
 
-        private void checkSign(String splitSign, String rangeSign, String wildcardSign)
-                throws SequenceSetInitException {
+        private void checkSign(String splitSign, String rangeSign, String wildcardSign) {
             if (splitSign.equals(rangeSign)) {
                 throw new SequenceSetInitException("split sign can not be equals with range sign");
             }
@@ -55,7 +54,7 @@ public final class SequenceSet {
             }
         }
 
-        private void checkSize(String sign, String name) throws SequenceSetInitException {
+        private void checkSize(String sign, String name) {
             if (sign == null || sign.length() == 0) {
                 throw new SequenceSetInitException(name + " sign can not be empty");
             }
@@ -67,7 +66,7 @@ public final class SequenceSet {
             }
         }
 
-        public SequenceSet build() throws SequenceSetInitException {
+        public SequenceSet build() {
             checkSize(splitSign, "split");
             checkSize(rangeSign, "range");
             checkSize(wildcardSign, "wildcard");
@@ -82,12 +81,7 @@ public final class SequenceSet {
     }
 
     public static SequenceSet defaults() {
-        try {
-            return new SequenceSetBuilder().build();
-        } catch (SequenceSetInitException e) {
-            // never thrown for defaults
-            return null;
-        }
+        return new SequenceSetBuilder().build();
     }
 
     private SequenceSet(String splitSign, String rangeSign, String wildcardSign) {
@@ -96,7 +90,7 @@ public final class SequenceSet {
         this.wildcardSign = wildcardSign;
     }
 
-    private void addParts(String idStr) throws SequenceSetException {
+    private void addParts(String idStr) {
         if (idStr == null || idStr.length() == 0) {
             return;
         }
@@ -123,21 +117,20 @@ public final class SequenceSet {
         cleanUp();
     }
 
-    private void checkString(String idStr) throws SequenceSetException {
-        int pos = 0;
-        for (char c : idStr.toCharArray()) {
+    private void checkString(String idStr) {
+        for (int pos = 0; pos < idStr.toCharArray().length; pos++) {
+            char c = idStr.toCharArray()[pos];
             if (!Character.isDigit(c)) {
                 if (splitSign.equals(idStr.substring(pos, pos + splitSign.length()))) {
-                    // okay
+                    pos += splitSign.length();
                 } else if (rangeSign.equals(idStr.substring(pos, pos + rangeSign.length()))) {
-                    // okay
+                    pos += rangeSign.length();
                 } else if (wildcardSign.equals(idStr.substring(pos, pos + wildcardSign.length()))) {
-                    // okay
+                    pos += wildcardSign.length();
                 } else {
                     throw new SequenceSetException(pos, c);
                 }
             }
-            pos++;
         }
     }
 
@@ -306,7 +299,7 @@ public final class SequenceSet {
         }
     }
 
-    public SequenceSet add(Collection<?> c) throws SequenceSetException {
+    public SequenceSet add(Collection<?> c) {
         for (Object o : c) {
             if (o == null) {
                 // ignore
@@ -325,30 +318,22 @@ public final class SequenceSet {
     }
 
     public SequenceSet add(Long l) {
-        try {
-            if (l != null) {
-                add(l.toString());
-            }
-        } catch (SequenceSetException e) {
-            // do never thrown for number
+        if (l != null) {
+            add(l.toString());
         }
 
         return this;
     }
 
     public SequenceSet add(Integer l) {
-        try {
-            if (l != null) {
-                add(l.toString());
-            }
-        } catch (SequenceSetException e) {
-            // do never thrown for number
+        if (l != null) {
+            add(l.toString());
         }
 
         return this;
     }
 
-    public SequenceSet add(String idStr) throws SequenceSetException {
+    public SequenceSet add(String idStr) {
         addParts(idStr);
 
         return this;

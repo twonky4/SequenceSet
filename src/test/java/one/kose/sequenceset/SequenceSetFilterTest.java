@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class SequenceSetFilterTest {
     @Test
-    public void testSimple() throws SequenceSetException {
+    public void testSimple() {
         SequenceSet set = SequenceSet.defaults().add("4");
 
         assertFalse(set.inList(1L));
@@ -22,7 +22,7 @@ public class SequenceSetFilterTest {
     }
 
     @Test
-    public void testSimpleWildcard() throws SequenceSetException {
+    public void testSimpleWildcard() {
         SequenceSet set = SequenceSet.defaults().add("*");
 
         assertTrue(set.inList(1L));
@@ -37,7 +37,7 @@ public class SequenceSetFilterTest {
     }
 
     @Test
-    public void testRange() throws SequenceSetException {
+    public void testRange() {
         SequenceSet set = SequenceSet.defaults().add("3:5");
 
         assertFalse(set.inList(1L));
@@ -52,7 +52,7 @@ public class SequenceSetFilterTest {
     }
 
     @Test
-    public void testRangeWildcardFrom() throws SequenceSetException {
+    public void testRangeWildcardFrom() {
         SequenceSet set = SequenceSet.defaults().add("*:5");
 
         assertTrue(set.inList(1L));
@@ -67,7 +67,7 @@ public class SequenceSetFilterTest {
     }
 
     @Test
-    public void testRangeWildcardTo() throws SequenceSetException {
+    public void testRangeWildcardTo() {
         SequenceSet set = SequenceSet.defaults().add("3:*");
 
         assertFalse(set.inList(1L));
@@ -82,7 +82,7 @@ public class SequenceSetFilterTest {
     }
 
     @Test
-    public void testRangeWildcardBoth() throws SequenceSetException {
+    public void testRangeWildcardBoth() {
         SequenceSet set = SequenceSet.defaults().add("*:*");
 
         assertTrue(set.inList(1L));
@@ -97,7 +97,7 @@ public class SequenceSetFilterTest {
     }
 
     @Test
-    public void testCounting() throws SequenceSetException {
+    public void testCounting() {
         SequenceSet set = SequenceSet.defaults().add("2,4");
 
         assertFalse(set.inList(1L));
@@ -112,7 +112,7 @@ public class SequenceSetFilterTest {
     }
 
     @Test
-    public void testReverseCounting() throws SequenceSetException {
+    public void testReverseCounting() {
         SequenceSet set = SequenceSet.defaults().add("3,2,1");
 
         assertTrue(set.inList(1L));
@@ -127,7 +127,7 @@ public class SequenceSetFilterTest {
     }
 
     @Test
-    public void testCountingWildcard() throws SequenceSetException {
+    public void testCountingWildcard() {
         SequenceSet set = SequenceSet.defaults().add("2,*");
 
         assertTrue(set.inList(1L));
@@ -142,7 +142,7 @@ public class SequenceSetFilterTest {
     }
 
     @Test
-    public void testComplex() throws SequenceSetException {
+    public void testComplex() {
         SequenceSet set = SequenceSet.defaults().add("2,4:6,8");
 
         assertFalse(set.inList(1L));
@@ -157,7 +157,7 @@ public class SequenceSetFilterTest {
     }
 
     @Test
-    public void testComplexWildcardOuter() throws SequenceSetException {
+    public void testComplexWildcardOuter() {
         SequenceSet set = SequenceSet.defaults().add("*:3,5,7:*");
 
         assertTrue(set.inList(1L));
@@ -172,7 +172,7 @@ public class SequenceSetFilterTest {
     }
 
     @Test
-    public void testComplexWildcardInner() throws SequenceSetException {
+    public void testComplexWildcardInner() {
         SequenceSet set = SequenceSet.defaults().add("3:*,*:7");
 
         assertTrue(set.inList(1L));
