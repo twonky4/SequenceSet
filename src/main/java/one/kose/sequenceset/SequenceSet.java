@@ -118,7 +118,7 @@ public final class SequenceSet {
     }
 
     private void checkString(String idStr) {
-        for (int pos = 0; pos < idStr.toCharArray().length; pos++) {
+        for (int pos = 0; pos < idStr.toCharArray().length;) {
             char c = idStr.toCharArray()[pos];
             if (!Character.isDigit(c)) {
                 if (splitSign.equals(idStr.substring(pos, pos + splitSign.length()))) {
@@ -130,6 +130,8 @@ public final class SequenceSet {
                 } else {
                     throw new SequenceSetException(pos, c);
                 }
+            } else {
+                pos++;
             }
         }
     }
