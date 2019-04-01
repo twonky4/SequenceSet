@@ -1,9 +1,11 @@
-package one.kose.sequenceset;
+package de.viseit.sequenceset;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+
+import de.viseit.sequenceset.SequenceSet;
 
 public class SequenceSetFilterTest {
 	@Test

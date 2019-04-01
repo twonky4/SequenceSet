@@ -1,4 +1,4 @@
-package one.kose.sequenceset;
+package de.viseit.sequenceset;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -8,6 +8,10 @@ import java.util.Collection;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import de.viseit.sequenceset.SequenceSet;
+import de.viseit.sequenceset.SequenceSetException;
+import de.viseit.sequenceset.SequenceSetInitException;
 
 public class SequenceSetBuildTest {
 	@Test

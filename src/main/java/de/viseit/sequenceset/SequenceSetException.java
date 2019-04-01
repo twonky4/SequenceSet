@@ -1,4 +1,4 @@
-package one.kose.sequenceset;
+package de.viseit.sequenceset;
 
 public class SequenceSetException extends RuntimeException {
     private static final long serialVersionUID = 8238618101835876578L;

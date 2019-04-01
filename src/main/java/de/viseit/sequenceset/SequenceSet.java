@@ -1,4 +1,4 @@
-package one.kose.sequenceset;
+package de.viseit.sequenceset;
 
 import java.util.ArrayList;
 import java.util.Collection;
